@@ -1,5 +1,6 @@
 package org.example.UserManagement;
 
+import java.io.*;
 import java.util.Arrays;
 
 public class UserManager {
@@ -89,4 +90,40 @@ public class UserManager {
             }
         }
     }
+
+    public void writeUserDataToFile() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("user_database.txt"))) {
+            for (User user : users) {
+                if (user != null) {
+                    writer.println(user.getUsername() + "," + user.getPassword() + "," + user.getRole());
+                }
+            }
+            System.out.println("Data saved successfully!");
+        } catch (IOException e) {
+            System.out.println("Error saving data: " + e.getMessage());
+        }
+    }
+
+    public void readUserDataFromFile() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("user_database.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 3) {
+                    String username = parts[0];
+                    String password = parts[1];
+                    String role = parts[0];
+
+//                    create and add a new user to the array
+                    User user = new User(username, password, role);
+                    addUser(user);
+                }
+            }
+            System.out.println("Data loaded successfully.");
+        } catch (IOException e) {
+            System.out.println("Error loading data: " + e.getMessage());
+        }
+    }
+
+
 }
